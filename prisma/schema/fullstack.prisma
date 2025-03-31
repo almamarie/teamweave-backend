@@ -1,0 +1,13 @@
+model Fullstack {
+  id         String   @id @default(uuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id])
+  creatorId  String
+  creator    User     @relation(fields: [creatorId], references: [id])
+  frontendId String
+  frontend   Frontend @relation(fields: [frontendId], references: [id])
+  backendId  String
+  backend    Backend  @relation(fields: [backendId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+}

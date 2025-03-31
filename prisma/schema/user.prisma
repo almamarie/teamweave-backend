@@ -1,0 +1,61 @@
+enum Gender {
+  male
+  female
+}
+
+model User {
+  id              String           @id @default(cuid())
+  firstName       String // first_name in DB
+  lastName        String // last_name in DB
+  otherNames      String? // other_names
+  dateOfBirth     DateTime? // date_of_birth
+  gender          Gender? // gender (male or female)
+  profilePicture  String? // profile_picture
+  about           String? // "about" field, formerly biography
+  twitterLink     String? // twitter_link
+  linkedinLink    String? // linkedin_link
+  facebookLink    String? // facebook_link
+  skills          String[] // Array of skills
+  email           String           @unique
+  password        String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @default(now())
+  projects        Project[]
+  journeyMaps     JourneyMap[]
+  uiuxDesigns     UIUXDesign[]
+  frontends       Frontend[]
+  backends        Backend[]
+  fullstacks      Fullstack[]
+  activityEvents  ActivityEvent[]
+  comments        Comment[]
+  upvotes         Upvote[]
+  projectComments ProjectComment[]
+  projectUpvotes  ProjectUpvote[]
+  userStories     UserStory[]
+  userJourneys    UserJourney[]
+
+  passwordHash         String
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+  passwordChangedAt    DateTime  @default(now())
+
+  accountIsActivated       Boolean   @default(false)
+  accountActivationToken   String?
+  accountActivationExpires DateTime?
+  accountActivatedAt       DateTime?
+
+  phoneNumberVerifiedAt               DateTime?
+  phoneNumberIsVerified               Boolean   @default(false)
+  phoneNumberVerificationToken        String?
+  phoneNumberVerificationTokenExpires DateTime?
+  phoneNumberVerificationCode         String?
+
+  mfaEnabled       Boolean?
+  mfaType          String    @default("NONE")
+  mfaCode          String?
+  mfaCodeExpiresAt DateTime?
+
+  role String
+
+  @@map("users")
+}

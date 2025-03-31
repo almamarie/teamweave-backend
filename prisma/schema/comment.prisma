@@ -1,0 +1,13 @@
+model Comment {
+  id         String    @id @default(uuid())
+  content    String
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  parentId   String?
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    Comment[] @relation("CommentReplies")
+  entityType String // e.g., "user_story", "uiux_design", "frontend", "backend"
+  entityId   String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
+}

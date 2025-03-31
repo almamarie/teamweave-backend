@@ -1,0 +1,14 @@
+model SubmissionUserStory {
+  id             String      @id @default(uuid())
+  submissionType String // "uiux_design" or "backend"
+  submissionId   String // ID from the corresponding submission table
+  userStoryId    String
+  userStory      UserStory   @relation(fields: [userStoryId], references: [id])
+  createdAt      DateTime    @default(now())
+  UIUXDesign     UIUXDesign? @relation(fields: [uIUXDesignId], references: [id])
+  uIUXDesignId   String?
+  Backend        Backend?    @relation(fields: [backendId], references: [id])
+  backendId      String?
+
+  @@unique([submissionType, submissionId, userStoryId])
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #fef5f9;
+        color: #333;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        border: 1px solid #f3e1e7;
+      }
+      .header {
+        text-align: center;
+        background-color: #D01257;
+        color: white;
+        padding: 20px;
+        border-radius: 12px 12px 0 0;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+      .content {
+        padding: 20px;
+        text-align: left;
+      }
+      .cta-button {
+        display: inline-block;
+        margin: 20px 0;
+        padding: 12px 24px;
+        font-size: 16px;
+        color: white;
+        background-color: #D01257;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+      .cta-button:hover {
+        background-color: #a90d43;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #777;
+        padding: 10px 0;
+        border-top: 1px solid #f3e1e7;
+      }
+      .footer p {
+        margin: 5px 0;
+      }
+      .logo {
+        text-align: center;
+        margin: 10px 0;
+      }
+      .logo img {
+        max-width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Welcome to TeamWeave!</h1>
+      </div>
+      <div class="logo">
+        {{!-- <img src="{{logoUrl}}" alt="TeamWeave Logo" /> --}}
+      </div>
+      <div class="content">
+        <p>
+          Dear <strong>{{firstName}}</strong>,
+        </p>
+        <p>
+          Welcome to <strong>TeamWeave</strong>, the anonymous dating platform where connections start with the heart.
+        </p>
+        <p>
+          We are thrilled to have you join our vibrant community of individuals seeking meaningful relationships.
+        </p>
+        <p>
+          To get started, activate your account by clicking the button below and step into a world of exciting possibilities.
+        </p>
+        <p style="text-align: center;">
+          <a href="{{activationUrl}}" class="cta-button">Activate My Account</a>
+        </p>
+        <p>
+          If you did not sign up for this account, please ignore this email or let us know.
+        </p>
+      </div>
+      <div class="footer">
+        <p>
+          TeamWeave - Let the heart guide you.
+        </p>
+        <p>
+          Need assistance? Contact us at <a href="mailto:support@TeamWeave.com">support@TeamWeave.com</a>.
+        </p>
+        <p>&copy; 2025 TeamWeave. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

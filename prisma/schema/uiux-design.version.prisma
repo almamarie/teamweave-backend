@@ -1,0 +1,12 @@
+model UIUXDesignVersion {
+  id           String     @id @default(uuid())
+  uiuxDesignId String
+  uiuxDesign   UIUXDesign @relation(fields: [uiuxDesignId], references: [id])
+  versionNum   Int
+  description  String?
+  url          String?
+  isCurrent    Boolean    @default(false)
+  metaData     Json?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+}

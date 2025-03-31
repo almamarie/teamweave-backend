@@ -1,0 +1,28 @@
+model AdminUser {
+  userId    String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName  String
+  lastName   String
+  otherNames String?
+  email      String  @unique
+
+  passwordIsSet Boolean @default(false)
+
+  passwordHash         String
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+  passwordChangedAt    DateTime? @default(now())
+
+  accountIsActivated Boolean   @default(false)
+  accountActivatedAt DateTime?
+
+  passwordSetToken   String?
+  passwordSetExpires DateTime?
+  passwordSetAt      DateTime?
+
+  role String
+
+  @@map("admin-users")
+}

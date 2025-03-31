@@ -1,0 +1,19 @@
+model Project {
+  id              String           @id @default(uuid())
+  name            String
+  description     String
+  createdById     String
+  createdBy       User             @relation(fields: [createdById], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @default(now())
+  milestones      Milestone[]
+  journeyMaps     JourneyMap[]
+  uiuxDesigns     UIUXDesign[]
+  frontends       Frontend[]
+  backends        Backend[]
+  fullstacks      Fullstack[]
+  activityEvents  ActivityEvent[]
+  projectComments ProjectComment[]
+  projectUpvotes  ProjectUpvote[]
+  userStories     UserStory[]
+}

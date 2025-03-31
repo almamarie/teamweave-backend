@@ -1,0 +1,10 @@
+model Epic {
+  id            String      @id @default(uuid())
+  title         String
+  description   String
+  userJourneyId String      @unique
+  userJourney   UserJourney @relation(fields: [userJourneyId], references: [id])
+  userStories   UserStory[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+}

@@ -1,0 +1,9 @@
+model EntityTag {
+  id         String @id @default(uuid())
+  entityType String // e.g., "user_story", "uiux_design", "frontend", "backend"
+  entityId   String
+  tagId      String
+  tag        Tag    @relation(fields: [tagId], references: [id])
+
+  @@unique([entityType, entityId, tagId])
+}

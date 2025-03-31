@@ -1,0 +1,12 @@
+model FrontendVersion {
+  id          String   @id @default(uuid())
+  frontendId  String
+  frontend    Frontend @relation(fields: [frontendId], references: [id])
+  versionNum  Int
+  description String?
+  url         String?
+  isCurrent   Boolean  @default(false)
+  metaData    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}

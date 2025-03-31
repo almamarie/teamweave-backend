@@ -1,0 +1,12 @@
+model BackendVersion {
+  id          String   @id @default(uuid())
+  backendId   String
+  backend     Backend  @relation(fields: [backendId], references: [id])
+  versionNum  Int
+  description String?
+  url         String?
+  isCurrent   Boolean  @default(false)
+  metaData    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
