@@ -24,11 +24,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
     if (payload.role === 'ADMIN' || payload.role === 'SUPER_ADMIN') {
       user = await this.prisma.adminUser.findUnique({
-        where: { userId: payload.sub }
+        where: { id: payload.sub }
       });
     } else if (payload.role === 'USER') {
       user = await this.prisma.user.findUnique({
-        where: { userId: payload.sub }
+        where: { id: payload.sub }
       });
     } else {
       throw new UnauthorizedException('Unauthorised');

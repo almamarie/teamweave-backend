@@ -35,7 +35,7 @@ export class AdminAuthService {
       }
     });
 
-    const resetToken = await this.createPasswordSetToken(admin.userId, linkDuration);
+    const resetToken = await this.createPasswordSetToken(admin.id, linkDuration);
 
     await this.emailService.sendMail({
       to: dto.email,
@@ -72,7 +72,7 @@ export class AdminAuthService {
     if (!user.passwordIsSet) {
       await this.prisma.adminUser.update({
         where: {
-          userId: user.userId
+          id: user.id
         },
         data: {
           passwordSetToken: null,
@@ -109,7 +109,7 @@ export class AdminAuthService {
       throw new ForbiddenException('Account not activated');
     }
 
-    return this.signToken(user.userId, user.role);
+    return this.signToken(user.id, user.role);
   }
 
   async forgotPassword(dto: ForgotPasswordDto): Promise<void> {
@@ -123,7 +123,7 @@ export class AdminAuthService {
       throw new NotFoundException('User not found');
     }
 
-    const resetToken = await this.createPasswordResetToken(user.userId);
+    const resetToken = await this.createPasswordResetToken(user.id);
 
     const resetURL = `${this.config.get('frontendResetPasswordUrl')}/${resetToken}`;
 
@@ -161,7 +161,7 @@ export class AdminAuthService {
 
     await this.prisma.adminUser.update({
       where: {
-        userId: user.userId
+        id: user.id
       },
       data: {
         passwordHash: hash,
@@ -184,14 +184,14 @@ export class AdminAuthService {
     const hash = await argon.hash(dto.newPassword);
 
     await this.prisma.adminUser.update({
-      where: { userId: user.userId },
+      where: { id: user.id },
       data: { passwordHash: hash }
     });
 
-    return this.signToken(user.userId, user.email);
+    return this.signToken(user.id, user.email);
   }
 
-  private async createPasswordSetToken(userId: string, tokenValidDurationMS: number = 10): Promise<string> {
+  private async createPasswordSetToken(id: string, tokenValidDurationMS: number = 10): Promise<string> {
     this.logger.log('Creating adin password reset token...');
     const resetToken = crypto.randomBytes(32).toString('hex');
 
@@ -199,7 +199,7 @@ export class AdminAuthService {
     const passwordSetExpires = new Date(Date.now() + tokenValidDurationMS * 60 * 1000);
 
     await this.prisma.adminUser.update({
-      where: { userId },
+      where: { id },
       data: {
         passwordSetToken,
         passwordSetExpires
@@ -212,7 +212,7 @@ export class AdminAuthService {
     return resetToken;
   }
 
-  private async createPasswordResetToken(userId: string, tokenValidDurationMS: number = 10): Promise<string> {
+  private async createPasswordResetToken(id: string, tokenValidDurationMS: number = 10): Promise<string> {
     this.logger.log('Creating adin password reset token...');
     const resetToken = crypto.randomBytes(32).toString('hex');
 
@@ -220,7 +220,7 @@ export class AdminAuthService {
     const passwordResetExpires = new Date(Date.now() + tokenValidDurationMS * 60 * 1000);
 
     await this.prisma.adminUser.update({
-      where: { userId },
+      where: { id },
       data: {
         passwordResetToken,
         passwordResetExpires
@@ -270,7 +270,7 @@ export class AdminAuthService {
       });
     } catch (error) {
       this.prisma.adminUser.update({
-        where: { userId: user.userId },
+        where: { id: user.id },
         data: {
           passwordResetToken: undefined,
           passwordResetExpires: undefined

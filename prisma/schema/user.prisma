@@ -9,17 +9,17 @@ model User {
   lastName        String // last_name in DB
   otherNames      String? // other_names
   dateOfBirth     DateTime? // date_of_birth
+  email           String           @unique
   gender          Gender? // gender (male or female)
   profilePicture  String? // profile_picture
-  about           String? // "about" field, formerly biography
+  bio             String? // "about" field, formerly biography
   twitterLink     String? // twitter_link
   linkedinLink    String? // linkedin_link
   facebookLink    String? // facebook_link
-  skills          String[] // Array of skills
-  email           String           @unique
-  password        String
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @default(now())
+
+  skills          String[] // Array of skills
   projects        Project[]
   journeyMaps     JourneyMap[]
   uiuxDesigns     UIUXDesign[]

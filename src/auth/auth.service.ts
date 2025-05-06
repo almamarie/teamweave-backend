@@ -57,7 +57,7 @@ export class AuthService {
 
       this.logger.log('Done creating new user.');
 
-      return this.signToken(user.userId, user.email);
+      return this.signToken(user.id, user.email);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -87,7 +87,7 @@ export class AuthService {
     if (!user.accountIsActivated) {
       await this.prisma.user.update({
         where: {
-          userId: user.userId
+          id: user.id
         },
         data: {
           accountIsActivated: true,
@@ -120,11 +120,11 @@ export class AuthService {
     }
 
     
-    const access_token = await this.signToken(user.userId, user.role);
-    const {userId,firstName, lastName, email, role} = user;
+    const access_token = await this.signToken(user.id, user.role);
+    const {id,firstName, lastName, email, role} = user;
     return {
       ...access_token,
-      user:{userId,firstName,lastName,email,role}
+      user:{id,firstName,lastName,email,role}
     }
   }
 
@@ -139,7 +139,7 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    const resetToken = await this.createPasswordResetToken(user.userId);
+    const resetToken = await this.createPasswordResetToken(user.id);
 
     const resetURL = `${this.config.get('FRONTEND_FORGOT_PASSWORD_URL')}/${resetToken}`;
 
@@ -173,7 +173,7 @@ export class AuthService {
 
     await this.prisma.user.update({
       where: {
-        userId: user.userId
+        id: user.id
       },
       data: {
         passwordHash: hash,
@@ -196,19 +196,19 @@ export class AuthService {
     const hash = await argon.hash(dto.newPassword);
 
     await this.prisma.user.update({
-      where: { userId: user.userId },
+      where: { id: user.id },
       data: { passwordHash: hash }
     });
 
-    return this.signToken(user.userId, user.email);
+    return this.signToken(user.id, user.email);
   }
 
-  private async signToken(userId: string, role: string): Promise<{ access_token: string }> {
+  private async signToken(id: string, role: string): Promise<{ access_token: string }> {
     this.logger.log('generating jwt...');
     const duration = 60 * 60 * this.config.get<number>('JWT_DURATION');
 
     const payload = {
-      sub: userId,
+      sub: id,
       iss: 'https://heartzup-api.com',
       aud: 'https://heartzup.com',
       exp: Math.floor(Date.now() / 1000) + duration,
@@ -267,7 +267,7 @@ export class AuthService {
     };
   }
 
-  private async createPasswordResetToken(userId: string): Promise<string> {
+  private async createPasswordResetToken(id: string): Promise<string> {
     this.logger.log('Creating password reset token...');
     const resetToken = crypto.randomBytes(32).toString('hex');
 
@@ -275,7 +275,7 @@ export class AuthService {
     const passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
 
     await this.prisma.user.update({
-      where: { userId },
+      where: { id },
       data: {
         passwordResetToken,
         passwordResetExpires
@@ -303,7 +303,7 @@ export class AuthService {
       });
     } catch (error) {
       this.prisma.user.update({
-        where: { userId: user.userId },
+        where: { id: user.id },
         data: {
           passwordResetToken: undefined,
           passwordResetExpires: undefined

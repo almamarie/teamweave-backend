@@ -4,7 +4,7 @@ import { FormattedUserType } from '../types';
 export function formatUser(user: User): FormattedUserType {
   const formatted = {
     ...user,
-    userId: user.userId,
+    id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
     otherNames: user.otherNames || '',

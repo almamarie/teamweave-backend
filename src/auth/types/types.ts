@@ -10,7 +10,7 @@ export type welcomeEmailType = {
 };
 
 export type FormattedUserType = {
-  userId: string;
+  id: string;
   firstName: string;
   lastName: string;
   otherNames: string;

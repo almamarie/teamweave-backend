@@ -8,25 +8,25 @@ import { formatProfile } from 'src/auth/utils/format-user';
 export class UserService {
   constructor(private prismaService: PrismaService) {}
 
-  async editUser(userId: string, dto: EditUserDto) {
+  async editUser(id: string, dto: EditUserDto) {
     const user = await this.prismaService.user.update({
-      where: { userId: userId },
+      where: {  id },
       data: { ...dto }
     });
     return user;
   }
 
-  async getUserById(userId: string): Promise<User> {
-    return await this.prismaService.user.findFirst({ where: { userId } });
+  async getUserById(id: string): Promise<User> {
+    return await this.prismaService.user.findFirst({ where: { id } });
   }
 
-  async deleteUserById(userId: string) {
-    return await this.prismaService.user.delete({ where: { userId } });
+  async deleteUserById(id: string) {
+    return await this.prismaService.user.delete({ where: { id } });
   }
 
-  async getUserProfileAdmin(userId: string) {
+  async getUserProfileAdmin(id: string) {
     const user = await this.prismaService.user.findFirst({
-      where: { userId },
+      where: { id },
     });
 
     if (!user) throw new NotFoundException
@@ -34,9 +34,9 @@ export class UserService {
     return formatProfile(user);
   }
 
-  async updateUserProfile(userId: string, dto: ProfileDto) {
+  async updateUserProfile(id: string, dto: ProfileDto) {
     return await this.prismaService.user.update({
-      where: { userId },
+      where: { id },
       data: { ...dto }
     });
   }
