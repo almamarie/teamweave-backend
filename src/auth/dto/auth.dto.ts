@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Gender } from "@prisma/client";
-import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsEmail, IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class AuthDto {
   @ApiProperty({
@@ -61,7 +61,7 @@ export class AuthDto {
   })
   bio: string;
 
-  @IsString()
+  @IsUrl()
   @IsOptional()
   @ApiProperty({
     type: String,
@@ -69,21 +69,65 @@ export class AuthDto {
   })
   twitterLink?: string;
 
-  @IsString()
+  @IsUrl()
   @IsOptional()
   @ApiProperty({
     type: String,
-    description: 'The twitter url of the user'
+    description: 'The linkedIn url of the user'
   })
     linkedinLink?: string;
   
+  @IsUrl()
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: 'The facebook url of the user'
+  })
+  facebookLink?: string;
+
+
   @IsString()
   @IsOptional()
   @ApiProperty({
     type: String,
-    description: 'The twitter url of the user'
+    description: 'The github username of the user'
   })
-  facebookLink?: string;
+    githubUsername?: string;
+  
+  
+    @IsUrl()
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: 'The gitlab username of the user'
+  })
+    gitlabUsername?: string;
+  
+  
+    @IsUrl()
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: 'The website url of the user'
+  })
+    website?: string;
+  
+  @IsString()
+      @IsNotEmpty()
+  @ApiProperty({
+    type: String,
+    description: 'The website url of the user'
+  })
+  location: string;
+
+
+  @IsArray()
+    @IsString({ each: true })
+  @ApiProperty({
+    type: [String],
+    description: 'The website url of the user'
+  })
+  skills?: string[];
 
   @IsString()
   @IsNotEmpty()

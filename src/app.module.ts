@@ -6,11 +6,12 @@ import { ConfigModule } from "@nestjs/config";
 import { LoggerMiddleware } from "./utils/logger.middleware";
 import { EmailModule } from './email/email.module';
 import { AdminAuthModule } from './admin/auth/admin-auth.module';
+import { ProjectsModule } from "./projects/projects.module";
 
 
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), EmailModule, AuthModule, UserModule, PrismaModule, AdminAuthModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), EmailModule, AuthModule, UserModule, PrismaModule, AdminAuthModule, ProjectsModule],
   providers: []
 })
 export class AppModule {

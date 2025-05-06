@@ -5,21 +5,25 @@ enum Gender {
 
 model User {
   id              String           @id @default(cuid())
-  firstName       String // first_name in DB
-  lastName        String // last_name in DB
-  otherNames      String? // other_names
-  dateOfBirth     DateTime? // date_of_birth
+  firstName       String 
+  lastName        String 
+  otherNames      String? 
+  dateOfBirth     DateTime? 
   email           String           @unique
-  gender          Gender? // gender (male or female)
-  profilePicture  String? // profile_picture
-  bio             String? // "about" field, formerly biography
-  twitterLink     String? // twitter_link
-  linkedinLink    String? // linkedin_link
-  facebookLink    String? // facebook_link
+  gender          Gender?
+  profilePicture  String?
+  bio             String?
+  twitterLink     String?
+  linkedinLink    String?
+  facebookLink    String?
+  githubUsername  String?
+  gitlabbUsername String?
+  website         String?
+  location        String?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @default(now())
 
-  skills          String[] // Array of skills
+  skills          Skills[] @relation("UserSkills")
   projects        Project[]
   journeyMaps     JourneyMap[]
   uiuxDesigns     UIUXDesign[]
@@ -44,16 +48,16 @@ model User {
   accountActivationExpires DateTime?
   accountActivatedAt       DateTime?
 
-  phoneNumberVerifiedAt               DateTime?
-  phoneNumberIsVerified               Boolean   @default(false)
-  phoneNumberVerificationToken        String?
-  phoneNumberVerificationTokenExpires DateTime?
-  phoneNumberVerificationCode         String?
+  // phoneNumberVerifiedAt               DateTime?
+  // phoneNumberIsVerified               Boolean   @default(false)
+  // phoneNumberVerificationToken        String?
+  // phoneNumberVerificationTokenExpires DateTime?
+  // phoneNumberVerificationCode         String?
 
-  mfaEnabled       Boolean?
-  mfaType          String    @default("NONE")
-  mfaCode          String?
-  mfaCodeExpiresAt DateTime?
+  // mfaEnabled       Boolean?
+  // mfaType          String    @default("NONE")
+  // mfaCode          String?
+  // mfaCodeExpiresAt DateTime?
 
   role String
 

@@ -31,9 +31,12 @@ export class AuthService {
   async signup(dto: AuthDto): Promise<{ access_token: string }> {
     try {
       this.logger.log('Creating new user...');
+      const { password, confirmPassword, skills, ...userDto } = dto;
+      
+      if (password !== confirmPassword) throw new BadRequestException("Passwords do not match")
+      
       const hash = await argon.hash(dto.password);
 
-      const { password, ...userDto } = dto;
 
       const { activationToken, accountActivationToken, accountActivationExpires } = await this.createAccountActivationToken();
 
@@ -47,13 +50,13 @@ export class AuthService {
         }
       });
 
-      await this.sendWelcomeEmail(
-        {
-          firstName: dto.firstName,
-          activationUrl: `${this.config.get('FRONTEND_ACTIVATE_ACCOUNT_URL')}/${activationToken}`
-        },
-        dto.email
-      );
+      // await this.sendWelcomeEmail(
+      //   {
+      //     firstName: dto.firstName,
+      //     activationUrl: `${this.config.get('FRONTEND_ACTIVATE_ACCOUNT_URL')}/${activationToken}`
+      //   },
+      //   dto.email
+      // );
 
       this.logger.log('Done creating new user.');
 
