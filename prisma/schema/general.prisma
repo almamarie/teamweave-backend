@@ -1,0 +1,14 @@
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
+}
+
+enum Gender {
+  male
+  female
+}
+
+enum EventRecordTypes {
+  ProjectUpvote
+  ProjectVote
+}

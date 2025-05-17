@@ -2,13 +2,13 @@ import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundEx
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as crypto from 'crypto';
 import * as argon from 'argon2';
-import { Roles } from 'src/types';
 import { EmailService } from 'src/email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { SetAdminPasswordDto, NewAdminDto } from './dto';
 import { ForgotPasswordDto, ResetPasswordDto, SigninDto, UpdatePasswordDto } from 'src/auth/dto';
 import { JwtService } from '@nestjs/jwt';
 import { AdminUser } from '@prisma/client';
+import { ROLES } from 'src/auth/utils/rbac/roles';
 
 @Injectable()
 export class AdminAuthService {
@@ -31,7 +31,7 @@ export class AdminAuthService {
         ...dto,
         passwordHash,
         passwordIsSet: false,
-        role: Roles.ADMIN
+        role: ROLES.ADMIN
       }
     });
 
@@ -239,8 +239,8 @@ export class AdminAuthService {
 
     const payload = {
       sub: userId,
-      iss: 'https://heartzup-api.com',
-      aud: 'https://heartzup.com',
+      iss: 'https://teamweave-api.com',
+      aud: 'https://teamweave.com',
       exp: Math.floor(Date.now() / 1000) + duration,
       iat: Math.floor(Date.now() / 1000),
       role: role

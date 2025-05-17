@@ -1,23 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { EditUserDto, ProfileDto } from './dto';
-import { User } from '@prisma/client';
-import { formatProfile } from 'src/auth/utils/format-user';
+import { Gender, User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(private prismaService: PrismaService) {}
 
   async editUser(id: string, dto: EditUserDto) {
+    if (!Gender[dto.gender.toLowerCase()]) {
+      throw new BadRequestException("Invalid Gender field")
+    }
     const user = await this.prismaService.user.update({
       where: {  id },
-      data: { ...dto }
+      data: { ...dto, gender: Gender[dto.gender.toLowerCase()] }
     });
     return user;
   }
 
   async getUserById(id: string): Promise<User> {
-    return await this.prismaService.user.findFirst({ where: { id } });
+    return await this.prismaService.user.findFirst({ where: { id }, include: {projects: true, skills:true, journeyMaps:true, uiuxDesigns: true, frontends:true, backends:true, fullstacks:true, activityEvents:true, comments: true, projectComments: true, projectUpvotes:true, userStories: true, userJourneys: true} });
   }
 
   async deleteUserById(id: string) {
@@ -31,7 +33,7 @@ export class UserService {
 
     if (!user) throw new NotFoundException
 
-    return formatProfile(user);
+    return user;
   }
 
   async updateUserProfile(id: string, dto: ProfileDto) {

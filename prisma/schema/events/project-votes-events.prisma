@@ -1,10 +1,9 @@
-model ProjectUpvote {
+model ProjectvoteEvents {
   id        String   @id @default(uuid())
+  type      VoteType
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   projectId String
   project   Project  @relation(fields: [projectId], references: [id])
   createdAt DateTime @default(now())
-
-  @@unique([userId, projectId])
 }

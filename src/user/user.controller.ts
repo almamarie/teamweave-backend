@@ -1,13 +1,15 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, SetMetadata, UseGuards } from '@nestjs/common';
-import { AdminUser, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { UserService } from './user.service';
 import { EditUserDto, ProfileDto } from './dto';
 import { RolesGuard } from '../../src/auth/guard/roles.guard';
-import { formatProfile, formatUser } from '../../src/auth/utils/format-user';
+import { formatUser } from '../../src/auth/utils/format-user';
 import { ApiNoContentResponse, ApiOkResponse } from '@nestjs/swagger';
-import { MessageEntity } from 'src/entities';
+import { USER_PERMISSIONS } from 'src/auth/utils/rbac/permissions';
+import { CreateResponse, GeneralResponseEntity } from 'src/entities';
+import { FormattedUserType } from 'src/auth/types';
 
 @Controller('users')
 @UseGuards(JwtGuard, RolesGuard)
@@ -15,99 +17,84 @@ export class UserController {
   constructor(private userService: UserService) {}
   @Get('me')
   @ApiOkResponse({
-    type: MessageEntity,
+    type: GeneralResponseEntity<FormattedUserType>,
     isArray: false
   })
-  @SetMetadata('permissions', ['get:own:user', 'pairer:user'])
-  getMe(@GetUser() user: User) {
-    return {
-      status: true,
-      message: 'User retrieved',
-      data: formatUser(user)
-    };
+  @SetMetadata('permissions', [USER_PERMISSIONS.GET_OWN_DATA])
+  getMe(@GetUser() user: User): GeneralResponseEntity<FormattedUserType> {
+    return CreateResponse(true, 'User retrieved', formatUser(user))
   }
 
   @Get('admin/:userId')
   @ApiOkResponse({
-    type: MessageEntity,
+    type: GeneralResponseEntity<FormattedUserType>,
     isArray: false
   })
-  @SetMetadata('permissions', ['pairer:user'])
-  async getUserById(@Param('userId') userId: string) {
-    return {
-      status: true,
-      message: 'User retrieved',
-      data: formatUser(await this.userService.getUserById(userId))
-    };
+  @SetMetadata('permissions', [USER_PERMISSIONS.GET_OTHER_DATA])
+  async getUserById(@Param('userId') userId: string): Promise<GeneralResponseEntity<FormattedUserType>> {
+    return CreateResponse (true, 'User retrieved',formatUser(await this.userService.getUserById(userId)))
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('admin/:userId')
   @ApiNoContentResponse()
-  @SetMetadata('permissions', ['pairer:user'])
+  @SetMetadata('permissions', [USER_PERMISSIONS.DELETE_OTHER])
   async deleteUserById(@Param('userId') userId: string) {
     return {
       status: true,
-      message: 'User retrieved',
+      message: 'User User deleted',
       data: await this.userService.deleteUserById(userId)
     };
   }
 
   @Patch('')
   @ApiOkResponse({
-    type: MessageEntity,
+    type: GeneralResponseEntity<FormattedUserType>,
     isArray: false
   })
-  @SetMetadata('permissions', ['patch:own:user'])
-  async editUser(@Body() dto: EditUserDto, @GetUser('userId') userId: string) {
-    return {
-      status: true,
-      message: 'User retrieved',
-      data: formatUser(await this.userService.editUser(userId, dto))
-    };
+  @SetMetadata('permissions', [USER_PERMISSIONS.UPDATE_OWN_DATA])
+  async editUser(@Body() dto: EditUserDto, @GetUser('id') userId: string): Promise<GeneralResponseEntity<FormattedUserType>> {
+    console.log("dto: ", dto)
+    return CreateResponse( true, 'User retrieved',formatUser(await this.userService.editUser(userId, dto)))
   }
 
-  @Get('profile')
-  @SetMetadata('permissions', ['get:own:profile'])
-  @ApiOkResponse({
-    type: MessageEntity,
-    isArray: false
-  })
-  async getUserProfile(@GetUser() user: User) {
-    return {
-      status: true,
-      message: 'User retrieved',
-      data: formatProfile(user)
-    };
-  }
+  // @Get('profile')
+  // @SetMetadata('permissions', [USER_PERMISSIONS.GET_OWN_DATA])
+  // @ApiOkResponse({
+  //   type: GeneralResponseEntity,
+  //   isArray: false
+  // })
+  // async getUserProfile(@GetUser() user: User) {
+  //   return {
+  //     status: true,
+  //     message: 'User retrieved',
+  //     data: formatProfile(user)
+  //   };
+  // }
 
   @Get('profile/:userId')
-  @SetMetadata('permissions', ['get:admin:profile'])
+  @SetMetadata('permissions', [USER_PERMISSIONS.GET_OTHER_DATA])
   @ApiOkResponse({
-    type: MessageEntity,
+    type: GeneralResponseEntity<FormattedUserType>,
     isArray: false
   })
-  async getUserProfileAdmin(@Param('userId') userId: string) {
-    return {
-      status: true,
-      message: 'User retrieved',
-      data: await this.userService.getUserProfileAdmin(userId)
-    };
+  async getUserProfileAdmin(@Param('userId') userId: string): Promise<GeneralResponseEntity<FormattedUserType>> {
+    return CreateResponse(true, 'User retrieved', formatUser(await this.userService.getUserProfileAdmin(userId)));
   }
 
-  @Patch('profile')
-  @ApiOkResponse({
-    type: MessageEntity,
-    isArray: false
-  })
-  @SetMetadata('permissions', ['patch:own:user'])
-  async updateProfile(@Body() dto: ProfileDto, @GetUser('userId') userId: string) {
-    return {
-      status: true,
-      message: 'User retrieved',
-      data: formatProfile(await this.userService.updateUserProfile(userId, dto))
-    };
-  }
+  // @Patch('profile')
+  // @ApiOkResponse({
+  //   type: GeneralResponseEntity,
+  //   isArray: false
+  // })
+  // @SetMetadata('permissions', [USER_PERMISSIONS.UPDATE_OTHER_DATA])
+  // async updateProfile(@Body() dto: ProfileDto, @GetUser('userId') userId: string) {
+  //   return {
+  //     status: true,
+  //     message: 'User retrieved',
+  //     data: formatProfile(await this.userService.updateUserProfile(userId, dto))
+  //   };
+  // }
 }
 
 

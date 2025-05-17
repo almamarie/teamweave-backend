@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class GeneralResponseEntity<T = {}> {
   @ApiProperty({
@@ -18,4 +18,10 @@ export class GeneralResponseEntity<T = {}> {
     description: 'The data returned by the response'
   })
   data: T;
+
+  @ApiPropertyOptional({
+    type: Number,
+    description: "The count of items in the array"
+  })
+  total?: number
 }

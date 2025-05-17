@@ -1,0 +1,5 @@
+model EventRecord {
+  id         String           @id @default(uuid())
+  entityType EventRecordTypes
+  entityId   String
+}

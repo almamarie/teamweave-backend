@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Gender } from "@prisma/client";
+import { Transform } from "class-transformer";
 import { IsArray, IsDate, IsEmail, IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class AuthDto {
@@ -36,21 +37,48 @@ export class AuthDto {
   email: string;
 
   @IsDate()
+  @Transform(({value}) => {
+    try {
+      return new Date(value);
+    } catch (error) {
+      return null;
+      }
+    })
   @IsNotEmpty()
   @ApiProperty({
     type: Date,
-    description: 'The date of birth os the user'
+    description: 'The date of birth of the user'
   })
   dateOfBirth: Date;
 
 
   @IsString()
+  @Transform(({ value }) => {
+    console.log("DTO Gender check: ", value)
+    try { 
+      if (typeof value !== 'string')
+        return null
+
+      if (value.toUpperCase() === "MALE") {
+        return Gender.male
+      }
+
+      if (value.toUpperCase() === "FEMALE") {
+        return Gender.female
+      }
+
+      return null;
+    }
+    catch (error) {
+      return null;
+    }
+  })
   @IsNotEmpty()
   @ApiProperty({
     type: String,
     description: 'The gender of the user'
   })
-  gender: Gender;
+  gender: string;
 
 
   @IsString()

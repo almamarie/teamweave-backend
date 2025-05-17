@@ -23,10 +23,10 @@ async function bootstrap() {
   app.useGlobalFilters(new CatchEverythingFilter(httpAdapterHost));
 
   const config = new DocumentBuilder()
-    .setTitle("heartzup API")
-    .setDescription("heartzup API description")
+    .setTitle("Teamweave API")
+    .setDescription("Teamweave API description")
     .setVersion("1.0")
-    .addTag("Heartzup")
+    .addTag("Teamweave")
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documentation/api', app, documentFactory);

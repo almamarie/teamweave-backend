@@ -1,42 +1,62 @@
-enum Gender {
-  male
-  female
-}
-
 model User {
-  id              String           @id @default(cuid())
-  firstName       String 
-  lastName        String 
-  otherNames      String? 
-  dateOfBirth     DateTime? 
-  email           String           @unique
-  gender          Gender?
-  profilePicture  String?
-  bio             String?
-  twitterLink     String?
-  linkedinLink    String?
-  facebookLink    String?
-  githubUsername  String?
-  gitlabbUsername String?
-  website         String?
-  location        String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @default(now())
+  id             String    @id @default(cuid())
+  firstName      String
+  lastName       String
+  otherNames     String?
+  dateOfBirth    DateTime?
+  email          String    @unique
+  gender         Gender?
+  profilePicture String?
+  bio            String?
+  twitterLink    String?
+  linkedinLink   String?
+  facebookLink   String?
+  githubUsername String?
+  gitlabUsername String?
+  website        String?
+  location       String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
 
-  skills          Skills[] @relation("UserSkills")
-  projects        Project[]
-  journeyMaps     JourneyMap[]
-  uiuxDesigns     UIUXDesign[]
-  frontends       Frontend[]
-  backends        Backend[]
+  skills      Skills[] @relation("UserSkills")
+  skillsCount Int      @default(0)
+
+  projects      Project[]
+  projectsCount Int       @default(0)
+
+  journeyMaps      JourneyMap[]
+  journeyMapsCount Int          @default(0)
+
+  uiuxDesigns      UIUXDesign[]
+  uiuxDesignsCount Int          @default(0)
+
+  frontends      Frontend[]
+  frontendsCount Int        @default(0)
+
+  backends      Backend[]
+  backendsCount Int       @default(0)
+
   fullstacks      Fullstack[]
-  activityEvents  ActivityEvent[]
-  comments        Comment[]
-  upvotes         Upvote[]
-  projectComments ProjectComment[]
-  projectUpvotes  ProjectUpvote[]
-  userStories     UserStory[]
-  userJourneys    UserJourney[]
+  fullstacksCount Int         @default(0)
+
+  activityEvents      ActivityEvent[]
+  activityEventsCount Int             @default(0)
+
+  comments      Comment[]
+  commentsCount Int       @default(0)
+
+  // upvotes         Upvote[]
+  projectComments      ProjectComment[]
+  projectCommentsCount Int              @default(0)
+
+  projectUpvotes      Projectvote[]
+  projectUpvotesCount Int           @default(0)
+
+  userStories      UserStory[]
+  userStoriesCount Int         @default(0)
+
+  userJourneys      UserJourney[]
+  userJourneysCount Int           @default(0)
 
   passwordHash         String
   passwordResetToken   String?
@@ -59,7 +79,8 @@ model User {
   // mfaCode          String?
   // mfaCodeExpiresAt DateTime?
 
-  role String
+  role              String
+  ProjectvoteEvents ProjectvoteEvents[]
 
   @@map("users")
 }

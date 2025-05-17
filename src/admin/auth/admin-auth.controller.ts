@@ -2,14 +2,14 @@ import { Body, Controller, HttpCode, HttpStatus, Param, Patch, Post, SetMetadata
 import { ApiOkResponse } from '@nestjs/swagger';
 import { AdminAuthService } from './admin-auth.service';
 import { NewAdminDto, SetAdminPasswordDto } from './dto';
-import { GeneralResponseEntity } from 'src/utils/entity';
+import { GeneralResponseEntity } from 'src/entities';
 import { JwtGuard } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { AdminUser } from '@prisma/client';
 import { ForgotPasswordDto, ResetPasswordDto, SigninDto, UpdatePasswordDto } from 'src/auth/dto';
 import { GeneralResponseType } from 'src/auth/types';
 import { GetUser } from 'src/auth/decorator';
-import { AccessTokenEntity, MessageEntity } from 'src/entities';
+
 
 @Controller('/auth/admin')
 export class AdminAuthController {
@@ -53,7 +53,7 @@ export class AdminAuthController {
   @HttpCode(HttpStatus.OK)
   @Post('forgot-password')
   @ApiOkResponse({
-    type: MessageEntity,
+    type: GeneralResponseEntity,
     isArray: false
   })
   async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<GeneralResponseType> {
@@ -68,7 +68,7 @@ export class AdminAuthController {
   @HttpCode(HttpStatus.OK)
   @Patch('reset-password/:token')
   @ApiOkResponse({
-    type: MessageEntity,
+    type: GeneralResponseEntity,
     isArray: false
   })
   async resetPassword(@Param('token') token: string, @Body() dto: ResetPasswordDto): Promise<GeneralResponseType> {
@@ -84,7 +84,7 @@ export class AdminAuthController {
   @HttpCode(HttpStatus.OK)
   @Patch('update-password')
   @ApiOkResponse({
-    type: AccessTokenEntity,
+    type: GeneralResponseEntity,
     isArray: false
   })
   async updatePassword(@Body() dto: UpdatePasswordDto, @GetUser() user: AdminUser): Promise<GeneralResponseType> {

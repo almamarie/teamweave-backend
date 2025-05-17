@@ -24,9 +24,11 @@ export class CatchEverythingFilter implements ExceptionFilter {
 
     this.logger.error('Error caught by exception filter:', errorLog);
 
+    console.log(errorLog.responseBody.message)
     if (resError.httpStatus === HttpStatus.INTERNAL_SERVER_ERROR) {
       resError.responseBody.message = 'Something Went Very Wrong';
     }
+
 
     httpAdapter.reply(ctx.getResponse(), resError.responseBody, resError.httpStatus);
   }

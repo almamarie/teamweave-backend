@@ -1,24 +1,42 @@
 import { User } from '@prisma/client';
 import { FormattedUserType } from '../types';
+import { NotFoundException } from '@nestjs/common';
 
 export function formatUser(user: User): FormattedUserType {
+  if (!user) throw new NotFoundException("User not found")
   const formatted = {
     ...user,
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    otherNames: user.otherNames || '',
-    email: user.email,
-    role: user.role,
     createdAt: user.createdAt.toString(),
     updatedAt: user.updatedAt.toString(),
     accountActivatedAt: user.accountActivatedAt ? user.accountActivatedAt.toString() : null,
     accountIsActivated: user.accountIsActivated,
-    phoneNumberIsVerified: user.phoneNumberIsVerified,
-    phoneNumberVerifiedAt: user.phoneNumberVerifiedAt ? user.phoneNumberVerifiedAt.toString() : null,
-    mfaEnabled: user.mfaEnabled,
-    mfaType: user.mfaType
+
+
+
+  skills: user["skills"] ?? [],
+  projects :       user["projects"] ?? [],
+  journeyMaps :    user["journeyMaps"] ?? [],
+  uiuxDesigns :    user["uiuxDesigns"]  ?? [],
+  frontends :      user["frontends"] ?? [],
+  backends  :      user["backends"] ?? [],
+  fullstacks:      user["fullstacks"] ?? [],
+  activityEvents:  user["activityEvents"] ?? [],
+  comments :       user["comments"] ?? [],
+  projectComments: user["projectComments"] ?? [],
+  projectUpvotes:  user["projectUpvotes"] ?? [],
+  userStories:     user["userStories"] ?? [],
+  userJourneys:    user["userJourneys"] ?? [],
+
+    
+    // phoneNumberIsVerified: user.phoneNumberIsVerified,
+    // phoneNumberVerifiedAt: user.phoneNumberVerifiedAt ? user.phoneNumberVerifiedAt.toString() : null,
+    // mfaEnabled: user.mfaEnabled,
+    // mfaType: user.mfaType
   };
+
+  if (!formatted.otherNames) {
+    formatted.otherNames = "";
+  }
 
   delete formatted.passwordHash;
   delete formatted.passwordResetToken;
@@ -26,23 +44,11 @@ export function formatUser(user: User): FormattedUserType {
   delete formatted.passwordChangedAt;
   delete formatted.accountActivationToken;
   delete formatted.accountActivationExpires;
-  delete formatted.phoneNumberVerificationToken;
-  delete formatted.phoneNumberVerificationTokenExpires;
-  delete formatted.phoneNumberVerificationCode;
-  delete formatted.mfaCode;
-  delete formatted.mfaCodeExpiresAt;
+  // delete formatted.phoneNumberVerificationToken;
+  // delete formatted.phoneNumberVerificationTokenExpires;
+  // delete formatted.phoneNumberVerificationCode;
+  // delete formatted.mfaCode;
+  // delete formatted.mfaCodeExpiresAt;
 
   return formatted;
-}
-
-export function formatProfile(user: any) {
-  return {
-    dateOfBirth: user.dateOfBirth,
-    gender: user.gender,
-    interest: user.interest,
-    location: user.location,
-    avatar: JSON.parse(user.avatar),
-    image: user.image,
-    ghanaCardImage: user.ghanaCardImage
-  };
 }

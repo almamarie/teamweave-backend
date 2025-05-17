@@ -5,9 +5,8 @@ export enum MFA {
   NONE = "NONE",
 }
 
-export enum Roles {
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  ADMIN = 'ADMIN',
-  PAIRER = 'PAIRER',
-  USER = 'USER'
+
+export enum SuccessType {
+  success = 'success',
+  error = 'error'
 }

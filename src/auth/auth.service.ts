@@ -12,12 +12,12 @@ import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Roles } from '../types';
 import { welcomeEmailType } from './types';
 import { EmailService } from '../../src/email/email.service';
 import * as crypto from 'crypto';
-import { User } from '@prisma/client';
+import { Gender, User } from '@prisma/client';
 import { SigninResponseDto } from './dto/signin-response.dto';
+import { ROLES } from './utils/rbac/roles';
 @Injectable()
 export class AuthService {
   private logger = new Logger(AuthService.name);
@@ -44,7 +44,8 @@ export class AuthService {
         data: {
           ...userDto,
           passwordHash: hash,
-          role: Roles.USER,
+          role: ROLES.USER,
+          gender: Gender[userDto.gender],
           accountActivationExpires,
           accountActivationToken
         }
@@ -60,7 +61,7 @@ export class AuthService {
 
       this.logger.log('Done creating new user.');
 
-      return this.signToken(user.id, user.email);
+      return this.signToken(user.id, user.role);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -122,7 +123,6 @@ export class AuthService {
       throw new ForbiddenException('Account not activated');
     }
 
-    
     const access_token = await this.signToken(user.id, user.role);
     const {id,firstName, lastName, email, role} = user;
     return {
@@ -212,8 +212,8 @@ export class AuthService {
 
     const payload = {
       sub: id,
-      iss: 'https://heartzup-api.com',
-      aud: 'https://heartzup.com',
+      iss: 'https://teamweave-api.com',
+      aud: 'https://teamweave.com',
       exp: Math.floor(Date.now() / 1000) + duration,
       iat: Math.floor(Date.now() / 1000),
       role: role

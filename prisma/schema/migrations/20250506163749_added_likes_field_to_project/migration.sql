@@ -204,8 +204,20 @@ CREATE TABLE "Project" (
     "createdById" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "likes" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Skills" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "name" TEXT NOT NULL,
+    "userId" TEXT,
+
+    CONSTRAINT "Skills_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -302,15 +314,17 @@ CREATE TABLE "users" (
     "lastName" TEXT NOT NULL,
     "otherNames" TEXT,
     "dateOfBirth" TIMESTAMP(3),
+    "email" TEXT NOT NULL,
     "gender" "Gender",
     "profilePicture" TEXT,
-    "about" TEXT,
+    "bio" TEXT,
     "twitterLink" TEXT,
     "linkedinLink" TEXT,
     "facebookLink" TEXT,
-    "skills" TEXT[],
-    "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
+    "githubUsername" TEXT,
+    "gitlabbUsername" TEXT,
+    "website" TEXT,
+    "location" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "passwordHash" TEXT NOT NULL,
@@ -321,18 +335,17 @@ CREATE TABLE "users" (
     "accountActivationToken" TEXT,
     "accountActivationExpires" TIMESTAMP(3),
     "accountActivatedAt" TIMESTAMP(3),
-    "phoneNumberVerifiedAt" TIMESTAMP(3),
-    "phoneNumberIsVerified" BOOLEAN NOT NULL DEFAULT false,
-    "phoneNumberVerificationToken" TEXT,
-    "phoneNumberVerificationTokenExpires" TIMESTAMP(3),
-    "phoneNumberVerificationCode" TEXT,
-    "mfaEnabled" BOOLEAN,
-    "mfaType" TEXT NOT NULL DEFAULT 'NONE',
-    "mfaCode" TEXT,
-    "mfaCodeExpiresAt" TIMESTAMP(3),
     "role" TEXT NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_UserSkills" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_UserSkills_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -364,6 +377,9 @@ CREATE UNIQUE INDEX "Upvote_userId_entityType_entityId_key" ON "Upvote"("userId"
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE INDEX "_UserSkills_B_index" ON "_UserSkills"("B");
 
 -- AddForeignKey
 ALTER TABLE "ActivityEvent" ADD CONSTRAINT "ActivityEvent_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -481,3 +497,9 @@ ALTER TABLE "UserStory" ADD CONSTRAINT "UserStory_creatorId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "UserStory" ADD CONSTRAINT "UserStory_epicId_fkey" FOREIGN KEY ("epicId") REFERENCES "Epic"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserSkills" ADD CONSTRAINT "_UserSkills_A_fkey" FOREIGN KEY ("A") REFERENCES "Skills"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserSkills" ADD CONSTRAINT "_UserSkills_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

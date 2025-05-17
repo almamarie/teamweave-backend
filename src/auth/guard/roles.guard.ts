@@ -8,8 +8,9 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { permissions } from '../utils/roles-permissions';
+import { ROLE_PERMISSIONS as permissions } from '../utils/rbac/roles-permissions';
 import { User } from '@prisma/client';
+import { ROLES } from '../utils/rbac/roles';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -33,12 +34,8 @@ export class RolesGuard implements CanActivate {
 
   checkPermission(payloadRole: string, permission: string[]) {
     this.logger.log('Permission Check called ...');
-    console.log({
-      'Payload Role: ': payloadRole,
-      'Permission: ': permission
-    });
     const rolePermissions: string[] | undefined =
-      permissions[payloadRole as keyof typeof permissions];
+      permissions[payloadRole.toUpperCase() as keyof typeof permissions];
     if (!rolePermissions)
       throw new InternalServerErrorException('Role not found.');
 
